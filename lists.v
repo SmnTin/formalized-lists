@@ -140,3 +140,33 @@ Section filter.
       + apply IH.
   Qed.
 End filter.
+
+Arguments filter {A}.
+
+Section map.
+  Variable A B : Type.
+  Variable f : A -> B.
+
+  Fixpoint map (xs : list A) : list B :=
+    match xs with
+    | [] => []
+    | x :: xs => f x :: map xs
+    end.
+
+  Theorem in_map a' xs :
+    In a' (map xs) -> exists a, f a = a' /\ In a xs.
+  Proof.
+    induction xs as [| x xs IH]; simpl.
+    - intros [].
+    - intros [H | H].
+      + exists x. split.
+        * apply H.
+        * left. reflexivity.
+      + apply IH in H as [a [Hf HIn]].
+        exists a. split.
+        * apply Hf.
+        * right. apply HIn.
+  Qed.
+End map.
+
+Arguments map {A} {B}.
