@@ -1,3 +1,5 @@
+![Build](https://github.com/smntin/formalized-lists/actions/workflows/build.yml/badge.svg)
+
 # Formalized lists
 
 This is a test assignment for the project "Mechanizing Denotational Semantics of Message-Passing Concurrency in the Coq Proof Assistant".
