@@ -79,3 +79,41 @@ End nth.
 
 Arguments nth {A}.
 Arguments nth_ok {A}.
+
+Section In.
+  Variable A : Type.
+
+  Fixpoint In (a : A) (xs : list A) : Prop :=
+    match xs with
+    | [] => False
+    | x :: xs => x = a \/ In a xs
+    end.
+
+  Theorem nth_In n d xs :
+    n < length xs -> In (nth n xs d) xs.
+  Proof.
+    generalize dependent n.
+    induction xs as [| x xs IH].
+    - intros n H. inversion H.
+    - intros [| n] H; simpl.
+      + left. reflexivity.
+      + right. apply IH. apply le_S_n. apply H.
+  Qed.
+
+  Theorem In_nth a xs d :
+    In a xs -> exists n, n < length xs /\ nth n xs d = a.
+  Proof.
+    induction xs as [| x xs IH]; simpl.
+    - intros [].
+    - intros [H | H].
+      + exists 0. split.
+        * apply le_n_S. apply le_0_n.
+        * simpl. apply H.
+      + apply IH in H as [n [H_len H_nth]].
+        exists (S n). split.
+        * apply le_n_S. apply H_len.
+        * simpl. apply H_nth.
+  Qed.
+End In.
+
+Arguments In {A}.
