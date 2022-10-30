@@ -117,3 +117,26 @@ Section In.
 End In.
 
 Arguments In {A}.
+
+Section filter.
+  Variable A : Type.
+  Variable f : A -> bool.
+
+  Fixpoint filter (xs : list A) : list A :=
+    match xs with
+    | [] => []
+    | x :: xs => if f x then x :: filter xs else filter xs
+    end.
+
+  Theorem filter_In xs :
+    forall a, In a (filter xs) -> f a = true.
+  Proof.
+    intros a. induction xs as [| x xs IH]; simpl.
+    - intros [].
+    - destruct (f x) eqn:Hfx; simpl.
+      + intros [H | H].
+        * rewrite <- H. apply Hfx.
+        * apply IH. apply H.
+      + apply IH.
+  Qed.
+End filter.
